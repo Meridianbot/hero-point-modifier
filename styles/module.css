@@ -1,0 +1,244 @@
+/* Hero Point Modifier – Gruppenressourcen-Reiter */
+
+/* Der Reiter selbst: das System setzt `.tab.active { display:flex; height:100% }`
+   (als Zeile). Wir machen daraus eine vertikale, scrollbare Spalte. */
+.sheet.party .tab.hpm-group-resources {
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0.75rem;
+    overflow: hidden auto;
+    scrollbar-gutter: stable;
+}
+
+/* ---- Kopfzeile ---- */
+.sheet.party .hpm-group-resources .hpm-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--color-pf-primary, #5e0000);
+}
+
+.sheet.party .hpm-group-resources .hpm-title {
+    margin: 0;
+    border: none;
+    font-family: var(--serif, "Signika"), serif;
+    font-size: var(--font-size-18, 1.15rem);
+    color: var(--color-pf-primary, #5e0000);
+    white-space: nowrap;
+}
+
+.sheet.party .hpm-group-resources .hpm-add {
+    flex: 0 0 auto;
+    width: auto;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+/* ---- Liste ---- */
+.sheet.party .hpm-group-resources .hpm-resource-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sheet.party .hpm-group-resources .hpm-empty {
+    padding: 1.25rem;
+    text-align: center;
+    font-style: italic;
+    opacity: 0.65;
+}
+
+/* ---- Einzelne Ressource (Karte) ---- */
+.sheet.party .hpm-group-resources .hpm-resource {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.6rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid rgba(94, 0, 0, 0.25);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.sheet.party .hpm-group-resources .hpm-icon {
+    flex: 0 0 auto;
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+    border: none;
+    border-radius: 4px;
+    cursor: default;
+}
+
+.sheet.party .hpm-group-resources .hpm-icon[data-action="edit-img"] {
+    cursor: pointer;
+    transition: filter 120ms ease;
+}
+
+.sheet.party .hpm-group-resources .hpm-icon[data-action="edit-img"]:hover {
+    filter: drop-shadow(0 0 4px var(--color-pf-primary, #5e0000));
+}
+
+/* Name nimmt den freien Platz, darf aber stark schrumpfen, damit nichts überläuft */
+.sheet.party .hpm-group-resources .hpm-name {
+    flex: 1 1 7rem;
+    min-width: 5rem;
+}
+
+.sheet.party .hpm-group-resources .hpm-name input,
+.sheet.party .hpm-group-resources .hpm-name-text {
+    width: 100%;
+    font-weight: 600;
+}
+
+.sheet.party .hpm-group-resources .hpm-name-text {
+    display: inline-block;
+    padding: 1px 2px;
+}
+
+/* Zähler */
+.sheet.party .hpm-group-resources .hpm-counter {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex: 0 0 auto;
+}
+
+.sheet.party .hpm-group-resources .hpm-counter input {
+    text-align: center;
+    height: 1.7rem;
+}
+
+.sheet.party .hpm-group-resources .hpm-value,
+.sheet.party .hpm-group-resources .hpm-max {
+    width: 2.8rem;
+    flex: 0 0 auto;
+}
+
+.sheet.party .hpm-group-resources .hpm-counter button {
+    flex: 0 0 auto;
+    width: 1.7rem;
+    height: 1.7rem;
+    line-height: 1;
+    padding: 0;
+    font-size: var(--font-size-16, 1rem);
+    font-weight: bold;
+}
+
+.sheet.party .hpm-group-resources .hpm-sep {
+    opacity: 0.55;
+    padding: 0 1px;
+}
+
+/* Hero-Point-Häkchen: darf bei wenig Platz in die nächste Zeile umbrechen */
+.sheet.party .hpm-group-resources .hpm-hp-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    cursor: help;
+    font-size: var(--font-size-12, 0.85rem);
+    line-height: 1.15;
+}
+
+.sheet.party .hpm-group-resources .hpm-hp-toggle input {
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+.sheet.party .hpm-group-resources .hpm-hp-toggle span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Löschen */
+.sheet.party .hpm-group-resources .hpm-delete {
+    flex: 0 0 auto;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    color: var(--color-pf-primary, #5e0000);
+}
+
+.sheet.party .hpm-group-resources .hpm-delete:hover {
+    color: #a00;
+}
+
+/* deaktivierte Elemente (fehlende Rechte) */
+.sheet.party .hpm-group-resources input:disabled,
+.sheet.party .hpm-group-resources button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ---- Heldenpunkt-Pool als Zahl (Charakterbogen-Header & Party-Overview) ---- */
+.hpm-pool-number {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.05em;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.hpm-pool-number .hpm-pool-value {
+    font-size: 1.15em;
+}
+
+.hpm-pool-number .hpm-pool-sep,
+.hpm-pool-number .hpm-pool-max {
+    opacity: 0.7;
+}
+
+/* ---- "Freier Heldenpunkt"-Box in der Party-Overview ---- */
+.hpm-free-hp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+    font-size: var(--font-size-12, 0.85rem);
+    white-space: nowrap;
+}
+
+.hpm-free-hp input {
+    cursor: pointer;
+    margin: 0;
+}
+
+.hpm-free-hp input:disabled {
+    cursor: not-allowed;
+}
+
+.hpm-free-hp .hpm-free-hp-label {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.75;
+}
+
+.hpm-free-hp.used .hpm-free-hp-label {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+.hpm-free-hp-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 0.25rem 0.4rem;
+}
+
+.hpm-free-hp-toolbar button {
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    line-height: 1;
+    font-size: var(--font-size-12, 0.85rem);
+}

@@ -1,0 +1,9 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+
+# Build-Artefakte (werden vom Release-Workflow erzeugt)
+module.zip

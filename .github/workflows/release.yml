@@ -1,0 +1,54 @@
+name: Release
+
+# Wird ausgelöst, sobald in GitHub ein Release veröffentlicht wird.
+# Der Release-Tag sollte die Version sein, z. B. "v1.0.0" oder "1.0.0".
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: module.json mit Version und URLs füllen
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          REPO: ${{ github.repository }}
+          SERVER: ${{ github.server_url }}
+        run: |
+          VERSION="${TAG#v}"
+          jq \
+            --arg version "$VERSION" \
+            --arg url "$SERVER/$REPO" \
+            --arg manifest "$SERVER/$REPO/releases/latest/download/module.json" \
+            --arg download "$SERVER/$REPO/releases/download/$TAG/module.zip" \
+            --arg readme "$SERVER/$REPO/blob/main/README.md" \
+            --arg bugs "$SERVER/$REPO/issues" \
+            '.version=$version | .url=$url | .manifest=$manifest | .download=$download | .readme=$readme | .bugs=$bugs' \
+            module.json > module.tmp
+          mv module.tmp module.json
+          echo "----- module.json -----"
+          cat module.json
+
+      - name: module.zip packen
+        run: |
+          zip -r module.zip \
+            module.json \
+            scripts \
+            styles \
+            lang \
+            README.md \
+            LICENSE
+
+      - name: Assets an das Release hängen
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            module.json
+            module.zip
