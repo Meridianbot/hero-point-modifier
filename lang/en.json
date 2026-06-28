@@ -13,5 +13,8 @@
     "HPM.NoPermission": "You lack permission to change the group pool. Owner permission on the party actor is required.",
     "HPM.FreeHeroPoint.Label": "free",
     "HPM.FreeHeroPoint.Hint": "Free hero point – automatically marked as used when spent (one-time). Toggleable with owner permission on the party actor.",
-    "HPM.FreeHeroPoint.ResetAll": "Reset all"
+    "HPM.FreeHeroPoint.GiveAll": "Give all players a free {name}",
+    "HPM.FreeHeroPoint.CollectToPool": "Move free {name} into the pool",
+    "HPM.FreeHeroPoint.NoneFree": "No member currently has a free hero point.",
+    "HPM.FreeHeroPoint.PoolFull": "The pool is already full – nothing transferred."
 }

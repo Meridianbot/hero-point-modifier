@@ -231,14 +231,36 @@
 
 .hpm-free-hp-toolbar {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
-    padding: 0 0.25rem 0.4rem;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 1rem 0.4rem 12px; /* an die .summary-Ränder der Overview angeglichen */
 }
 
 .hpm-free-hp-toolbar button {
-    width: auto;
     flex: 0 0 auto;
-    white-space: nowrap;
-    line-height: 1;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.7rem;
+    line-height: 1.25;
     font-size: var(--font-size-12, 0.85rem);
+    white-space: nowrap;
+    color: var(--color-pf-primary, #5e0000);
+    background: rgba(94, 0, 0, 0.06);
+    border: 1px solid rgba(94, 0, 0, 0.35);
+    border-radius: 4px;
+    box-shadow: none;
+    transition: background 120ms ease, box-shadow 120ms ease;
+}
+
+.hpm-free-hp-toolbar button:hover {
+    background: rgba(94, 0, 0, 0.14);
+    box-shadow: 0 0 5px rgba(94, 0, 0, 0.3);
+}
+
+.hpm-free-hp-toolbar button i {
+    opacity: 0.85;
 }

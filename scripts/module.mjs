@@ -305,7 +305,7 @@ function onRenderPartySheet(app, html) {
 
     // Overview: bei aktivem Pool die Mitglieder-HP durch "freier Heldenpunkt"-Boxen ersetzen
     decorateMemberHeroPoints(root, app.actor);
-    injectFreeHeroPointReset(root, app.actor);
+    injectFreeHeroPointToolbar(root, app.actor);
 }
 
 /* ============================================================ */
@@ -379,6 +379,51 @@ async function resetAllFreeHeroPoints(party) {
     } catch (err) {
         ui.notifications?.warn(loc("HPM.NoPermission"));
         console.warn(`${MODULE_ID} | Frei-HP-Reset fehlgeschlagen`, err);
+    }
+}
+
+/**
+ * Überträgt alle noch freien Boxen in den Pool: jede freie zählt +1 in den Pool
+ * (bis zum Maximum), die übertragenen Boxen werden als genutzt markiert.
+ */
+async function collectFreeIntoPool(party) {
+    if (!party) return;
+    const poolRes = getResources(party).find((r) => r.heroPointReplacement);
+    if (!poolRes) return;
+
+    const free = getFreeHeroPoints(party);
+    const freeMembers = (party.members ?? []).filter(
+        (m) => m?.isOfType?.("character") && !free[m.id],
+    );
+    if (freeMembers.length === 0) {
+        ui.notifications?.info(loc("HPM.FreeHeroPoint.NoneFree"));
+        return;
+    }
+
+    const resources = foundry.utils.deepClone(getResources(party));
+    const r = resources.find((x) => x.id === poolRes.id);
+    if (!r) return;
+
+    const current = clampValue(r.value, r.max);
+    const space = r.max === null || r.max === undefined || !Number.isFinite(r.max)
+        ? Infinity
+        : Math.max(0, r.max - current);
+    const toAdd = Math.min(freeMembers.length, space);
+    if (toAdd <= 0) {
+        ui.notifications?.warn(loc("HPM.FreeHeroPoint.PoolFull"));
+        return;
+    }
+
+    r.value = clampValue(current + toAdd, r.max);
+    const updates = { [`flags.${MODULE_ID}.${FLAG_KEY}`]: resources };
+    for (const m of freeMembers.slice(0, toAdd)) {
+        updates[`flags.${MODULE_ID}.${FREE_HP_KEY}.${m.id}`] = true;
+    }
+    try {
+        await party.update(updates);
+    } catch (err) {
+        ui.notifications?.warn(loc("HPM.NoPermission"));
+        console.warn(`${MODULE_ID} | Übertrag in Pool fehlgeschlagen`, err);
     }
 }
 
@@ -544,23 +589,36 @@ function renderFreeHeroPointBox(el, party, member) {
     el.replaceWith(label); // ersetzt das <a> samt System-Listener vollständig
 }
 
-/** GM-Button "Alle freigeben" oben in der Overview (nur bei aktivem Pool). */
-function injectFreeHeroPointReset(root, party) {
+/** GM-Buttons oben in der Overview (nur bei aktivem Pool). */
+function injectFreeHeroPointToolbar(root, party) {
     if (!game.user.isGM) return;
     const region = root.querySelector('[data-region="overview"]');
-    if (!region || region.querySelector(".hpm-free-hp-toolbar")) return;
-    if (!getResources(party).some((r) => r.heroPointReplacement)) return;
+    const content = region?.querySelector(":scope > .content") ?? region;
+    if (!content || content.querySelector(".hpm-free-hp-toolbar")) return;
+
+    const poolRes = getResources(party).find((r) => r.heroPointReplacement);
+    if (!poolRes) return;
+    const name = poolRes.name || loc("HPM.Tab.Label");
 
     const bar = document.createElement("div");
     bar.className = "hpm-free-hp-toolbar";
 
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.innerHTML = `<i class="fa-solid fa-rotate-left"></i> ${escapeHTML(loc("HPM.FreeHeroPoint.ResetAll"))}`;
-    btn.addEventListener("click", () => resetAllFreeHeroPoints(party));
+    const giveBtn = document.createElement("button");
+    giveBtn.type = "button";
+    giveBtn.innerHTML =
+        `<i class="fa-solid fa-hand-holding-heart"></i> ` +
+        escapeHTML(game.i18n.format("HPM.FreeHeroPoint.GiveAll", { name }));
+    giveBtn.addEventListener("click", () => resetAllFreeHeroPoints(party));
 
-    bar.append(btn);
-    region.prepend(bar);
+    const collectBtn = document.createElement("button");
+    collectBtn.type = "button";
+    collectBtn.innerHTML =
+        `<i class="fa-solid fa-arrow-down-to-line"></i> ` +
+        escapeHTML(game.i18n.format("HPM.FreeHeroPoint.CollectToPool", { name }));
+    collectBtn.addEventListener("click", () => collectFreeIntoPool(party));
+
+    bar.append(giveBtn, collectBtn);
+    content.prepend(bar);
 }
 
 /** Bei Pool-Änderung offene Mitglieder-Bögen aktualisieren. */
