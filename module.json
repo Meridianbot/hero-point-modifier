@@ -9,7 +9,7 @@
   "readme": "https://github.com/your-username/hero-point-modifier/blob/main/README.md",
   "bugs": "https://github.com/your-username/hero-point-modifier/issues",
   "compatibility": {
-    "minimum": "13",
+    "minimum": "14",
     "verified": "14"
   },
   "authors": [
