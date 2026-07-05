@@ -23,5 +23,8 @@
     "HPM.Action.Delete": "Delete action",
     "HPM.Action.Description": "Description",
     "HPM.Action.Cost": "Cost (positive = subtract, negative = add)",
-    "HPM.Action.NotEnough": "Not enough \"{resource}\" for \"{action}\"."
+    "HPM.Action.NotEnough": "Not enough \"{resource}\" for \"{action}\".",
+    "HPM.Action.Type": "Action type",
+    "HPM.Action.Type.Free": "Free",
+    "HPM.Action.Type.Reaction": "Reaction"
 }

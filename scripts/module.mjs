@@ -22,6 +22,14 @@ const FLAG_KEY = "resources";
 const TAB = "group-resources";
 const DEFAULT_ICON = "icons/svg/item-bag.svg";
 
+// PF2e-Aktionstypen -> Zeichen der "Pathfinder2eActions"-Font (1/2/3 = Aktionen, F = frei, R = Reaktion)
+const ACTION_TYPES = ["1", "2", "3", "free", "reaction"];
+const ACTION_GLYPH = { 1: "1", 2: "2", 3: "3", free: "F", reaction: "R" };
+
+function actionGlyphChar(type) {
+    return ACTION_GLYPH[type] ?? "1";
+}
+
 /* -------------------------------------------- */
 /*  Hilfsfunktionen                              */
 /* -------------------------------------------- */
@@ -139,12 +147,18 @@ function actionRowHTML(action, { isGM, canEdit }) {
     const effectClass = effect > 0 ? "gain" : effect < 0 ? "cost" : "";
     const editDisabled = canEdit ? "" : "disabled";
 
+    const type = ACTION_TYPES.includes(action.actionType) ? action.actionType : "1";
+    const typeOptions = ACTION_TYPES.map((t) =>
+        `<option value="${t}" ${t === type ? "selected" : ""}>${escapeHTML(actionTypeLabel(t))}</option>`,
+    ).join("");
+
     return `
     <div class="hpm-action" data-action-id="${escapeHTML(action.id)}">
         <button type="button" class="hpm-exec" ${editDisabled}
                 data-tooltip="${escapeHTML(loc("HPM.Action.Execute"))}">
             <i class="fa-solid fa-play"></i>
         </button>
+        <span class="action-glyph hpm-action-glyph">${actionGlyphChar(type)}</span>
         <span class="hpm-action-effect ${effectClass}">${effectStr}</span>
         <div class="hpm-action-body">
             ${isGM
@@ -157,6 +171,11 @@ function actionRowHTML(action, { isGM, canEdit }) {
                 : (aDesc ? `<span class="hpm-action-desc-text">${aDesc}</span>` : "")}
         </div>
         ${isGM
+            ? `<select class="hpm-action-type" data-tooltip="${escapeHTML(loc("HPM.Action.Type"))}">
+                   ${typeOptions}
+               </select>`
+            : ""}
+        ${isGM
             ? `<input type="number" class="hpm-action-cost" value="${cost}"
                       data-tooltip="${escapeHTML(loc("HPM.Action.Cost"))}" />`
             : ""}
@@ -166,6 +185,15 @@ function actionRowHTML(action, { isGM, canEdit }) {
                </button>`
             : ""}
     </div>`;
+}
+
+/** Lesbares Label für einen Aktionstyp (im GM-Auswahlfeld). */
+function actionTypeLabel(type) {
+    switch (type) {
+        case "free": return loc("HPM.Action.Type.Free");
+        case "reaction": return loc("HPM.Action.Type.Reaction");
+        default: return type; // "1", "2", "3"
+    }
 }
 
 /** Baut den Inhalt des Reiters neu auf und hängt die Listener an. */
@@ -229,6 +257,8 @@ function attachListeners(app, tabEl) {
                 setActionField(app, tabEl, id, actionId, "description", e.target.value));
             actEl.querySelector(".hpm-action-cost")?.addEventListener("change", (e) =>
                 setActionField(app, tabEl, id, actionId, "cost", e.target.value));
+            actEl.querySelector(".hpm-action-type")?.addEventListener("change", (e) =>
+                setActionField(app, tabEl, id, actionId, "actionType", e.target.value));
             actEl.querySelector(".hpm-action-delete")?.addEventListener("click", () =>
                 deleteAction(app, tabEl, id, actionId));
         }
@@ -248,6 +278,7 @@ function addAction(app, tabEl, resourceId) {
             name: loc("HPM.Action.NewName"),
             description: "",
             cost: 1,
+            actionType: "1",
         });
     });
 }
@@ -267,6 +298,9 @@ function setActionField(app, tabEl, resourceId, actionId, field, rawValue) {
                 break;
             case "cost":
                 a.cost = Math.floor(Number(rawValue) || 0);
+                break;
+            case "actionType":
+                a.actionType = ACTION_TYPES.includes(rawValue) ? rawValue : "1";
                 break;
             default:
                 return false;
@@ -326,10 +360,12 @@ function postActionChat(actor, resource, action, before, after) {
         ? `<p class="hpm-chat-desc">${escapeHTML(action.description)}</p>`
         : "";
 
+    const type = ACTION_TYPES.includes(action.actionType) ? action.actionType : "1";
+
     const content = `
         <div class="hpm-action-chat">
             <header class="hpm-action-chat-header">
-                <i class="fa-solid fa-bolt"></i>
+                <span class="action-glyph">${actionGlyphChar(type)}</span>
                 <strong>${escapeHTML(action.name)}</strong>
             </header>
             ${desc}

@@ -23,5 +23,8 @@
     "HPM.Action.Delete": "Aktion löschen",
     "HPM.Action.Description": "Beschreibung",
     "HPM.Action.Cost": "Kosten (positiv = abziehen, negativ = gutschreiben)",
-    "HPM.Action.NotEnough": "Nicht genug „{resource}\" für „{action}\"."
+    "HPM.Action.NotEnough": "Nicht genug „{resource}\" für „{action}\".",
+    "HPM.Action.Type": "Aktionstyp",
+    "HPM.Action.Type.Free": "Frei",
+    "HPM.Action.Type.Reaction": "Reaktion"
 }
