@@ -1,30 +1,42 @@
 {
-    "HPM.Tab.Label": "Gruppenressourcen",
-    "HPM.AddResource": "Ressource anlegen",
-    "HPM.DeleteResource": "Ressource löschen",
-    "HPM.DeleteConfirm": "Soll die Ressource \"{name}\" wirklich gelöscht werden?",
-    "HPM.NoResources": "Noch keine Gruppenressourcen angelegt.",
-    "HPM.NewResourceName": "Neue Ressource",
-    "HPM.Max": "Maximum (leer = unbegrenzt)",
-    "HPM.EditIcon": "Icon ändern",
-    "HPM.HeroPointReplacement.Label": "Als Hero Point Ersatz nutzen",
-    "HPM.HeroPointReplacement.Hint": "Ersetzt die individuellen Heldenpunkte durch diese gemeinsame Gruppenressource.",
-    "HPM.PoolTooltip": "Gemeinsamer Heldenpunkt-Pool: {name} (Linksklick +1 / Rechtsklick −1)",
-    "HPM.NoPermission": "Keine Berechtigung, den Gruppen-Pool zu ändern. Dafür ist Owner-Recht am Party-Actor nötig.",
-    "HPM.FreeHeroPoint.Label": "frei",
-    "HPM.FreeHeroPoint.Hint": "Freier Heldenpunkt – wird beim Ausgeben automatisch als genutzt markiert (einmalig). Umschaltbar mit Owner-Recht am Party-Actor.",
-    "HPM.FreeHeroPoint.GiveAll": "Allen Spielern freien {name} geben",
-    "HPM.FreeHeroPoint.CollectToPool": "Freie {name} in den Pool übertragen",
-    "HPM.FreeHeroPoint.NoneFree": "Kein Mitglied hat aktuell einen freien Heldenpunkt.",
-    "HPM.FreeHeroPoint.PoolFull": "Der Pool ist bereits voll – nichts übertragen.",
-    "HPM.Action.Add": "Aktion",
-    "HPM.Action.NewName": "Neue Aktion",
-    "HPM.Action.Execute": "Ausführen",
-    "HPM.Action.Delete": "Aktion löschen",
-    "HPM.Action.Description": "Beschreibung",
-    "HPM.Action.Cost": "Kosten (positiv = abziehen, negativ = gutschreiben)",
-    "HPM.Action.NotEnough": "Nicht genug „{resource}\" für „{action}\".",
-    "HPM.Action.Type": "Aktionstyp",
-    "HPM.Action.Type.Free": "Frei",
-    "HPM.Action.Type.Reaction": "Reaktion"
+    "HPM": {
+        "Tab": {
+            "Label": "Gruppenressourcen"
+        },
+        "AddResource": "Ressource anlegen",
+        "DeleteResource": "Ressource löschen",
+        "DeleteConfirm": "Soll die Ressource \"{name}\" wirklich gelöscht werden?",
+        "NoResources": "Noch keine Gruppenressourcen angelegt.",
+        "NewResourceName": "Neue Ressource",
+        "Max": "Maximum (leer = unbegrenzt)",
+        "EditIcon": "Icon ändern",
+        "HeroPointReplacement": {
+            "Label": "Als Hero Point Ersatz nutzen",
+            "Hint": "Ersetzt die individuellen Heldenpunkte durch diese gemeinsame Gruppenressource."
+        },
+        "PoolTooltip": "Gemeinsamer Heldenpunkt-Pool: {name} (Linksklick +1 / Rechtsklick −1)",
+        "NoPermission": "Keine Berechtigung, den Gruppen-Pool zu ändern. Dafür ist Owner-Recht am Party-Actor nötig.",
+        "FreeHeroPoint": {
+            "Label": "frei",
+            "Hint": "Freier Heldenpunkt – wird beim Ausgeben automatisch als genutzt markiert (einmalig). Umschaltbar mit Owner-Recht am Party-Actor.",
+            "GiveAll": "Allen Spielern freien {name} geben",
+            "CollectToPool": "Freie {name} in den Pool übertragen",
+            "NoneFree": "Kein Mitglied hat aktuell einen freien Heldenpunkt.",
+            "PoolFull": "Der Pool ist bereits voll – nichts übertragen."
+        },
+        "Action": {
+            "Add": "Aktion",
+            "NewName": "Neue Aktion",
+            "Execute": "Ausführen",
+            "Delete": "Aktion löschen",
+            "Description": "Beschreibung",
+            "Cost": "Kosten (positiv = abziehen, negativ = gutschreiben)",
+            "NotEnough": "Nicht genug „{resource}\" für „{action}\".",
+            "TypeTooltip": "Aktionstyp",
+            "Type": {
+                "Free": "Frei",
+                "Reaction": "Reaktion"
+            }
+        }
+    }
 }

@@ -1,30 +1,42 @@
 {
-    "HPM.Tab.Label": "Group Resources",
-    "HPM.AddResource": "Add Resource",
-    "HPM.DeleteResource": "Delete Resource",
-    "HPM.DeleteConfirm": "Do you really want to delete the resource \"{name}\"?",
-    "HPM.NoResources": "No group resources created yet.",
-    "HPM.NewResourceName": "New Resource",
-    "HPM.Max": "Maximum (empty = unlimited)",
-    "HPM.EditIcon": "Change icon",
-    "HPM.HeroPointReplacement.Label": "Use as Hero Point replacement",
-    "HPM.HeroPointReplacement.Hint": "Replaces the individual hero points with this shared group resource.",
-    "HPM.PoolTooltip": "Shared hero point pool: {name} (left click +1 / right click −1)",
-    "HPM.NoPermission": "You lack permission to change the group pool. Owner permission on the party actor is required.",
-    "HPM.FreeHeroPoint.Label": "free",
-    "HPM.FreeHeroPoint.Hint": "Free hero point – automatically marked as used when spent (one-time). Toggleable with owner permission on the party actor.",
-    "HPM.FreeHeroPoint.GiveAll": "Give all players a free {name}",
-    "HPM.FreeHeroPoint.CollectToPool": "Move free {name} into the pool",
-    "HPM.FreeHeroPoint.NoneFree": "No member currently has a free hero point.",
-    "HPM.FreeHeroPoint.PoolFull": "The pool is already full – nothing transferred.",
-    "HPM.Action.Add": "Action",
-    "HPM.Action.NewName": "New action",
-    "HPM.Action.Execute": "Execute",
-    "HPM.Action.Delete": "Delete action",
-    "HPM.Action.Description": "Description",
-    "HPM.Action.Cost": "Cost (positive = subtract, negative = add)",
-    "HPM.Action.NotEnough": "Not enough \"{resource}\" for \"{action}\".",
-    "HPM.Action.Type": "Action type",
-    "HPM.Action.Type.Free": "Free",
-    "HPM.Action.Type.Reaction": "Reaction"
+    "HPM": {
+        "Tab": {
+            "Label": "Group Resources"
+        },
+        "AddResource": "Add Resource",
+        "DeleteResource": "Delete Resource",
+        "DeleteConfirm": "Do you really want to delete the resource \"{name}\"?",
+        "NoResources": "No group resources created yet.",
+        "NewResourceName": "New Resource",
+        "Max": "Maximum (empty = unlimited)",
+        "EditIcon": "Change icon",
+        "HeroPointReplacement": {
+            "Label": "Use as Hero Point replacement",
+            "Hint": "Replaces the individual hero points with this shared group resource."
+        },
+        "PoolTooltip": "Shared hero point pool: {name} (left click +1 / right click −1)",
+        "NoPermission": "You lack permission to change the group pool. Owner permission on the party actor is required.",
+        "FreeHeroPoint": {
+            "Label": "free",
+            "Hint": "Free hero point – automatically marked as used when spent (one-time). Toggleable with owner permission on the party actor.",
+            "GiveAll": "Give all players a free {name}",
+            "CollectToPool": "Move free {name} into the pool",
+            "NoneFree": "No member currently has a free hero point.",
+            "PoolFull": "The pool is already full – nothing transferred."
+        },
+        "Action": {
+            "Add": "Action",
+            "NewName": "New action",
+            "Execute": "Execute",
+            "Delete": "Delete action",
+            "Description": "Description",
+            "Cost": "Cost (positive = subtract, negative = add)",
+            "NotEnough": "Not enough \"{resource}\" for \"{action}\".",
+            "TypeTooltip": "Action type",
+            "Type": {
+                "Free": "Free",
+                "Reaction": "Reaction"
+            }
+        }
+    }
 }

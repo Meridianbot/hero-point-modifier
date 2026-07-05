@@ -171,7 +171,7 @@ function actionRowHTML(action, { isGM, canEdit }) {
                 : (aDesc ? `<span class="hpm-action-desc-text">${aDesc}</span>` : "")}
         </div>
         ${isGM
-            ? `<select class="hpm-action-type" data-tooltip="${escapeHTML(loc("HPM.Action.Type"))}">
+            ? `<select class="hpm-action-type" data-tooltip="${escapeHTML(loc("HPM.Action.TypeTooltip"))}">
                    ${typeOptions}
                </select>`
             : ""}
