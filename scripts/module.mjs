@@ -77,38 +77,95 @@ function resourceRowHTML(resource, { isGM, canEdit }) {
     const editDisabled = canEdit ? "" : "disabled";
     const gmDisabled = isGM ? "" : "disabled";
 
+    const actions = Array.isArray(resource.actions) ? resource.actions : [];
+    const actionRows = actions.map((a) => actionRowHTML(a, { isGM, canEdit })).join("");
+    const showActions = actions.length > 0 || isGM;
+
     return `
     <li class="hpm-resource" data-resource-id="${escapeHTML(resource.id)}">
-        <img class="hpm-icon" src="${img}" alt="${name}"
-             ${isGM ? `data-action="edit-img" data-tooltip="${escapeHTML(loc("HPM.EditIcon"))}"` : ""} />
+        <div class="hpm-resource-main">
+            <img class="hpm-icon" src="${img}" alt="${name}"
+                 ${isGM ? `data-action="edit-img" data-tooltip="${escapeHTML(loc("HPM.EditIcon"))}"` : ""} />
 
-        <div class="hpm-name">
-            ${canEdit
-                ? `<input type="text" class="hpm-name-input" value="${name}" ${editDisabled}
-                          placeholder="${escapeHTML(loc("HPM.NewResourceName"))}" />`
-                : `<span class="hpm-name-text">${name}</span>`}
+            <div class="hpm-name">
+                ${canEdit
+                    ? `<input type="text" class="hpm-name-input" value="${name}" ${editDisabled}
+                              placeholder="${escapeHTML(loc("HPM.NewResourceName"))}" />`
+                    : `<span class="hpm-name-text">${name}</span>`}
+            </div>
+
+            <div class="hpm-counter">
+                <button type="button" class="hpm-dec" ${editDisabled} title="-1">−</button>
+                <input type="number" class="hpm-value" value="${value}" ${editDisabled} />
+                <span class="hpm-sep">/</span>
+                <input type="number" class="hpm-max" value="${max}" min="0" ${editDisabled}
+                       placeholder="∞" data-tooltip="${escapeHTML(loc("HPM.Max"))}" />
+                <button type="button" class="hpm-inc" ${editDisabled} title="+1">+</button>
+            </div>
+
+            <label class="hpm-hp-toggle" data-tooltip="${escapeHTML(loc("HPM.HeroPointReplacement.Hint"))}">
+                <input type="checkbox" class="hpm-hp" ${resource.heroPointReplacement ? "checked" : ""} ${gmDisabled} />
+                <span>${escapeHTML(loc("HPM.HeroPointReplacement.Label"))}</span>
+            </label>
+
+            ${isGM
+                ? `<button type="button" class="hpm-delete" data-tooltip="${escapeHTML(loc("HPM.DeleteResource"))}">
+                       <i class="fa-solid fa-trash"></i>
+                   </button>`
+                : ""}
         </div>
 
-        <div class="hpm-counter">
-            <button type="button" class="hpm-dec" ${editDisabled} title="-1">−</button>
-            <input type="number" class="hpm-value" value="${value}" ${editDisabled} />
-            <span class="hpm-sep">/</span>
-            <input type="number" class="hpm-max" value="${max}" min="0" ${editDisabled}
-                   placeholder="∞" data-tooltip="${escapeHTML(loc("HPM.Max"))}" />
-            <button type="button" class="hpm-inc" ${editDisabled} title="+1">+</button>
+        ${showActions
+            ? `<div class="hpm-actions">
+                   ${actionRows}
+                   ${isGM
+                       ? `<button type="button" class="hpm-add-action">
+                              <i class="fa-solid fa-plus"></i> ${escapeHTML(loc("HPM.Action.Add"))}
+                          </button>`
+                       : ""}
+               </div>`
+            : ""}
+    </li>`;
+}
+
+/** Eine Aktion einer Ressource: Ausführen-Button, Effekt-Badge, Name/Beschreibung/Kosten. */
+function actionRowHTML(action, { isGM, canEdit }) {
+    const aName = escapeHTML(action.name ?? "");
+    const aDesc = escapeHTML(action.description ?? "");
+    const cost = Number(action.cost) || 0;
+    // Effekt auf die Ressource = -Kosten (positive Kosten => Abzug)
+    const effect = -cost;
+    const effectStr = `${effect > 0 ? "+" : effect < 0 ? "−" : "±"}${Math.abs(effect)}`;
+    const effectClass = effect > 0 ? "gain" : effect < 0 ? "cost" : "";
+    const editDisabled = canEdit ? "" : "disabled";
+
+    return `
+    <div class="hpm-action" data-action-id="${escapeHTML(action.id)}">
+        <button type="button" class="hpm-exec" ${editDisabled}
+                data-tooltip="${escapeHTML(loc("HPM.Action.Execute"))}">
+            <i class="fa-solid fa-play"></i>
+        </button>
+        <span class="hpm-action-effect ${effectClass}">${effectStr}</span>
+        <div class="hpm-action-body">
+            ${isGM
+                ? `<input type="text" class="hpm-action-name" value="${aName}"
+                          placeholder="${escapeHTML(loc("HPM.Action.NewName"))}" />`
+                : `<span class="hpm-action-name-text">${aName}</span>`}
+            ${isGM
+                ? `<input type="text" class="hpm-action-desc" value="${aDesc}"
+                          placeholder="${escapeHTML(loc("HPM.Action.Description"))}" />`
+                : (aDesc ? `<span class="hpm-action-desc-text">${aDesc}</span>` : "")}
         </div>
-
-        <label class="hpm-hp-toggle" data-tooltip="${escapeHTML(loc("HPM.HeroPointReplacement.Hint"))}">
-            <input type="checkbox" class="hpm-hp" ${resource.heroPointReplacement ? "checked" : ""} ${gmDisabled} />
-            <span>${escapeHTML(loc("HPM.HeroPointReplacement.Label"))}</span>
-        </label>
-
         ${isGM
-            ? `<button type="button" class="hpm-delete" data-tooltip="${escapeHTML(loc("HPM.DeleteResource"))}">
+            ? `<input type="number" class="hpm-action-cost" value="${cost}"
+                      data-tooltip="${escapeHTML(loc("HPM.Action.Cost"))}" />`
+            : ""}
+        ${isGM
+            ? `<button type="button" class="hpm-action-delete" data-tooltip="${escapeHTML(loc("HPM.Action.Delete"))}">
                    <i class="fa-solid fa-trash"></i>
                </button>`
             : ""}
-    </li>`;
+    </div>`;
 }
 
 /** Baut den Inhalt des Reiters neu auf und hängt die Listener an. */
@@ -160,7 +217,135 @@ function attachListeners(app, tabEl) {
 
         li.querySelector(".hpm-delete")?.addEventListener("click", () => deleteResource(app, tabEl, id));
         li.querySelector('[data-action="edit-img"]')?.addEventListener("click", () => editIcon(app, tabEl, id));
+
+        // Aktionen
+        li.querySelector(".hpm-add-action")?.addEventListener("click", () => addAction(app, tabEl, id));
+        for (const actEl of li.querySelectorAll(".hpm-action")) {
+            const actionId = actEl.dataset.actionId;
+            actEl.querySelector(".hpm-exec")?.addEventListener("click", () => executeAction(app, tabEl, id, actionId));
+            actEl.querySelector(".hpm-action-name")?.addEventListener("change", (e) =>
+                setActionField(app, tabEl, id, actionId, "name", e.target.value));
+            actEl.querySelector(".hpm-action-desc")?.addEventListener("change", (e) =>
+                setActionField(app, tabEl, id, actionId, "description", e.target.value));
+            actEl.querySelector(".hpm-action-cost")?.addEventListener("change", (e) =>
+                setActionField(app, tabEl, id, actionId, "cost", e.target.value));
+            actEl.querySelector(".hpm-action-delete")?.addEventListener("click", () =>
+                deleteAction(app, tabEl, id, actionId));
+        }
     }
+}
+
+/* ---- Aktionen: CRUD + Ausführen ---- */
+
+function addAction(app, tabEl, resourceId) {
+    if (!game.user.isGM) return;
+    return mutate(app, tabEl, (resources) => {
+        const r = resources.find((x) => x.id === resourceId);
+        if (!r) return false;
+        if (!Array.isArray(r.actions)) r.actions = [];
+        r.actions.push({
+            id: foundry.utils.randomID(),
+            name: loc("HPM.Action.NewName"),
+            description: "",
+            cost: 1,
+        });
+    });
+}
+
+function setActionField(app, tabEl, resourceId, actionId, field, rawValue) {
+    if (!game.user.isGM) return; // Aktionen anlegen/bearbeiten nur GM
+    return mutate(app, tabEl, (resources) => {
+        const r = resources.find((x) => x.id === resourceId);
+        const a = r?.actions?.find((x) => x.id === actionId);
+        if (!a) return false;
+        switch (field) {
+            case "name":
+                a.name = String(rawValue ?? "").trim() || loc("HPM.Action.NewName");
+                break;
+            case "description":
+                a.description = String(rawValue ?? "");
+                break;
+            case "cost":
+                a.cost = Math.floor(Number(rawValue) || 0);
+                break;
+            default:
+                return false;
+        }
+    });
+}
+
+async function deleteAction(app, tabEl, resourceId, actionId) {
+    if (!game.user.isGM) return;
+    return mutate(app, tabEl, (resources) => {
+        const r = resources.find((x) => x.id === resourceId);
+        if (!Array.isArray(r?.actions)) return false;
+        const idx = r.actions.findIndex((x) => x.id === actionId);
+        if (idx === -1) return false;
+        r.actions.splice(idx, 1);
+    });
+}
+
+/** Aktion ausführen: Kosten verrechnen (clamp) und Name/Beschreibung in den Chat posten. */
+async function executeAction(app, tabEl, resourceId, actionId) {
+    const actor = app.actor;
+    if (!actor.isOwner) {
+        ui.notifications?.warn(loc("HPM.NoPermission"));
+        return;
+    }
+    const resource = getResources(actor).find((r) => r.id === resourceId);
+    const action = resource?.actions?.find((a) => a.id === actionId);
+    if (!resource || !action) return;
+
+    const cost = Number(action.cost) || 0;
+    const before = clampValue(resource.value, resource.max);
+
+    if (cost > 0 && before < cost) {
+        ui.notifications?.warn(game.i18n.format("HPM.Action.NotEnough", {
+            resource: resource.name,
+            action: action.name,
+        }));
+        return;
+    }
+
+    const after = clampValue(before - cost, resource.max);
+
+    await mutate(app, tabEl, (list) => {
+        const r = list.find((x) => x.id === resourceId);
+        if (!r) return false;
+        r.value = after;
+    });
+
+    postActionChat(actor, resource, action, before, after);
+}
+
+/** Chat-Karte für eine ausgeführte Aktion. */
+function postActionChat(actor, resource, action, before, after) {
+    const delta = after - before;
+    const deltaStr = `${delta > 0 ? "+" : delta < 0 ? "−" : "±"}${Math.abs(delta)}`;
+    const desc = action.description
+        ? `<p class="hpm-chat-desc">${escapeHTML(action.description)}</p>`
+        : "";
+
+    const content = `
+        <div class="hpm-action-chat">
+            <header class="hpm-action-chat-header">
+                <i class="fa-solid fa-bolt"></i>
+                <strong>${escapeHTML(action.name)}</strong>
+            </header>
+            ${desc}
+            <div class="hpm-action-chat-result">
+                ${escapeHTML(resource.name)}:
+                <span class="from">${before}</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+                <span class="to">${after}</span>
+                <span class="delta">(${deltaStr})</span>
+            </div>
+        </div>`;
+
+    ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ actor }),
+        content,
+    });
 }
 
 function addResource(app, tabEl) {

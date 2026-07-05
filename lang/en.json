@@ -16,5 +16,12 @@
     "HPM.FreeHeroPoint.GiveAll": "Give all players a free {name}",
     "HPM.FreeHeroPoint.CollectToPool": "Move free {name} into the pool",
     "HPM.FreeHeroPoint.NoneFree": "No member currently has a free hero point.",
-    "HPM.FreeHeroPoint.PoolFull": "The pool is already full – nothing transferred."
+    "HPM.FreeHeroPoint.PoolFull": "The pool is already full – nothing transferred.",
+    "HPM.Action.Add": "Action",
+    "HPM.Action.NewName": "New action",
+    "HPM.Action.Execute": "Execute",
+    "HPM.Action.Delete": "Delete action",
+    "HPM.Action.Description": "Description",
+    "HPM.Action.Cost": "Cost (positive = subtract, negative = add)",
+    "HPM.Action.NotEnough": "Not enough \"{resource}\" for \"{action}\"."
 }

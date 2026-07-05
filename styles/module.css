@@ -57,14 +57,20 @@
 /* ---- Einzelne Ressource (Karte) ---- */
 .sheet.party .hpm-group-resources .hpm-resource {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 0.6rem;
+    flex-direction: column;
+    gap: 0.5rem;
     padding: 0.5rem 0.65rem;
     border: 1px solid rgba(94, 0, 0, 0.25);
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.45);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.sheet.party .hpm-group-resources .hpm-resource-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.6rem;
 }
 
 .sheet.party .hpm-group-resources .hpm-icon {
@@ -172,11 +178,130 @@
     color: #a00;
 }
 
+/* ---- Aktionen unter einer Ressource ---- */
+.sheet.party .hpm-group-resources .hpm-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-top: 0.4rem;
+    margin-top: 0.1rem;
+    border-top: 1px dashed rgba(94, 0, 0, 0.2);
+}
+
+.sheet.party .hpm-group-resources .hpm-action {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.sheet.party .hpm-group-resources .hpm-exec {
+    flex: 0 0 auto;
+    width: 1.7rem;
+    height: 1.7rem;
+    padding: 0;
+    line-height: 1;
+    color: var(--color-pf-primary, #5e0000);
+}
+
+.sheet.party .hpm-group-resources .hpm-action-effect {
+    flex: 0 0 auto;
+    min-width: 2.3rem;
+    text-align: center;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    font-size: var(--font-size-12, 0.85rem);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.sheet.party .hpm-group-resources .hpm-action-effect.cost {
+    color: #7a1010;
+    background: rgba(122, 16, 16, 0.1);
+}
+
+.sheet.party .hpm-group-resources .hpm-action-effect.gain {
+    color: #1a6b1a;
+    background: rgba(26, 107, 26, 0.12);
+}
+
+.sheet.party .hpm-group-resources .hpm-action-body {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.sheet.party .hpm-group-resources .hpm-action-body input {
+    width: 100%;
+}
+
+.sheet.party .hpm-group-resources .hpm-action-name-text {
+    font-weight: 600;
+}
+
+.sheet.party .hpm-group-resources .hpm-action-desc-text {
+    font-size: var(--font-size-12, 0.85rem);
+    opacity: 0.75;
+}
+
+.sheet.party .hpm-group-resources .hpm-action-cost {
+    flex: 0 0 auto;
+    width: 3rem;
+    text-align: center;
+}
+
+.sheet.party .hpm-group-resources .hpm-action-delete {
+    flex: 0 0 auto;
+    width: 1.7rem;
+    height: 1.7rem;
+    padding: 0;
+    color: var(--color-pf-primary, #5e0000);
+}
+
+.sheet.party .hpm-group-resources .hpm-add-action {
+    align-self: flex-start;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.55rem;
+    font-size: var(--font-size-12, 0.85rem);
+    line-height: 1.2;
+    white-space: nowrap;
+    opacity: 0.9;
+}
+
 /* deaktivierte Elemente (fehlende Rechte) */
 .sheet.party .hpm-group-resources input:disabled,
 .sheet.party .hpm-group-resources button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* ---- Chat-Karte einer ausgeführten Aktion ---- */
+.hpm-action-chat .hpm-action-chat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--font-size-15, 1rem);
+}
+
+.hpm-action-chat .hpm-chat-desc {
+    margin: 0.25rem 0;
+    opacity: 0.9;
+}
+
+.hpm-action-chat .hpm-action-chat-result {
+    margin-top: 0.25rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    font-variant-numeric: tabular-nums;
+}
+
+.hpm-action-chat .hpm-action-chat-result .delta {
+    font-weight: 700;
 }
 
 /* ---- Heldenpunkt-Pool als Zahl (Charakterbogen-Header & Party-Overview) ---- */
